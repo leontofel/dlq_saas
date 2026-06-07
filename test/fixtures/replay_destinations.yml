@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project: one
+  name: MyString
+  destination_type: MyString
+  url: MyString
+  http_method: MyString
+  headers_text: MyText
+  authentication_type: MyString
+  authentication_secret_encrypted: MyText
+  allowed_success_statuses_text: MyText
+  timeout_seconds: 1
+  max_requests_per_second: 1
+  status: MyString
+
+two:
+  project: two
+  name: MyString
+  destination_type: MyString
+  url: MyString
+  http_method: MyString
+  headers_text: MyText
+  authentication_type: MyString
+  authentication_secret_encrypted: MyText
+  allowed_success_statuses_text: MyText
+  timeout_seconds: 1
+  max_requests_per_second: 1
+  status: MyString

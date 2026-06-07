@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  failed_message: one
+  created_by_user_id: 1
+  version_number: 1
+  payload_text: MyText
+  change_note: MyText
+
+two:
+  failed_message: two
+  created_by_user_id: 1
+  version_number: 1
+  payload_text: MyText
+  change_note: MyText

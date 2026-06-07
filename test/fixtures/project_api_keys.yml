@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project: one
+  created_by_user_id: 1
+  name: MyString
+  key_prefix: MyString
+  key_digest: MyString
+  scopes_text: MyText
+  last_used_at: 2026-06-07 14:45:51
+  revoked_at: 2026-06-07 14:45:51
+
+two:
+  project: two
+  created_by_user_id: 1
+  name: MyString
+  key_prefix: MyString
+  key_digest: MyString
+  scopes_text: MyText
+  last_used_at: 2026-06-07 14:45:51
+  revoked_at: 2026-06-07 14:45:51

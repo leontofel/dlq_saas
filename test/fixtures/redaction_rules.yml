@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project: one
+  json_path: MyString
+  replacement: MyString
+  status: MyString
+
+two:
+  project: two
+  json_path: MyString
+  replacement: MyString
+  status: MyString

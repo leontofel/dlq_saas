@@ -1,0 +1,51 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project: one
+  source: one
+  incident_group_id: 1
+  external_message_id: MyString
+  idempotency_key: MyString
+  dedup_identity_key: MyString
+  queue_name: MyString
+  event_type: MyString
+  status: MyString
+  latest_replay_status: MyString
+  payload_original_text: MyText
+  payload_size_bytes: 1
+  metadata_text: MyText
+  fingerprint: MyString
+  failure_type_latest: MyString
+  failure_message_latest: MyText
+  latest_consumer_version: MyString
+  correlation_id: MyString
+  tenant_identifier: MyString
+  attempt_count: 1
+  first_failed_at: 2026-06-07 14:46:05
+  last_failed_at: 2026-06-07 14:46:05
+  payload_expires_at: 2026-06-07 14:46:05
+
+two:
+  project: two
+  source: two
+  incident_group_id: 1
+  external_message_id: MyString
+  idempotency_key: MyString
+  dedup_identity_key: MyString
+  queue_name: MyString
+  event_type: MyString
+  status: MyString
+  latest_replay_status: MyString
+  payload_original_text: MyText
+  payload_size_bytes: 1
+  metadata_text: MyText
+  fingerprint: MyString
+  failure_type_latest: MyString
+  failure_message_latest: MyText
+  latest_consumer_version: MyString
+  correlation_id: MyString
+  tenant_identifier: MyString
+  attempt_count: 1
+  first_failed_at: 2026-06-07 14:46:05
+  last_failed_at: 2026-06-07 14:46:05
+  payload_expires_at: 2026-06-07 14:46:05

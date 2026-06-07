@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project: one
+  name: MyString
+  trigger_type: MyString
+  conditions_text: MyText
+  channel_type: MyString
+  channel_configuration_encrypted: MyText
+  escalation_configuration_text: MyText
+  status: MyString
+
+two:
+  project: two
+  name: MyString
+  trigger_type: MyString
+  conditions_text: MyText
+  channel_type: MyString
+  channel_configuration_encrypted: MyText
+  escalation_configuration_text: MyText
+  status: MyString
