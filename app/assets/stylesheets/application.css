@@ -8,3 +8,399 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+:root {
+  --auth-ivory: #f4efe4;
+  --auth-paper: rgba(255, 251, 245, 0.76);
+  --auth-ink: #1f1b18;
+  --auth-muted: #665c53;
+  --auth-accent: #c55a11;
+  --auth-accent-deep: #8e3510;
+  --auth-line: rgba(53, 41, 31, 0.12);
+  --auth-success: #1f6a4e;
+  --auth-error: #a33a2f;
+  --auth-shadow: 0 24px 90px rgba(30, 20, 13, 0.16);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background:
+    radial-gradient(circle at top left, rgba(197, 90, 17, 0.18), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(71, 57, 44, 0.14), transparent 28%),
+    var(--auth-ivory);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--auth-ink);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.32), transparent 45%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 39px,
+      rgba(53, 41, 31, 0.035) 40px
+    );
+  font-family: "Charter", "Bitstream Charter", "Sitka Text", Cambria, serif;
+}
+
+a {
+  color: inherit;
+}
+
+.auth-page {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  min-height: 100vh;
+}
+
+.auth-page__panel {
+  padding: 4.5rem;
+  position: relative;
+}
+
+.auth-page__panel--story {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.8rem;
+  overflow: hidden;
+}
+
+.auth-page__panel--story::after {
+  content: "";
+  position: absolute;
+  inset: 2rem 0 2rem 2rem;
+  border: 1px solid var(--auth-line);
+  border-right: none;
+  pointer-events: none;
+}
+
+.auth-page__panel--form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1rem;
+}
+
+.auth-page--ember .auth-page__panel--story {
+  background:
+    linear-gradient(180deg, rgba(255, 248, 239, 0.92), rgba(244, 239, 228, 0.9)),
+    linear-gradient(135deg, rgba(197, 90, 17, 0.08), transparent 55%);
+}
+
+.auth-page--ink .auth-page__panel--story {
+  background:
+    linear-gradient(180deg, rgba(35, 29, 25, 0.96), rgba(49, 39, 32, 0.95)),
+    radial-gradient(circle at top left, rgba(255, 179, 101, 0.18), transparent 30%);
+  color: #f7f0e6;
+}
+
+.auth-kicker,
+.auth-card__eyebrow,
+.auth-metric__label,
+.auth-token__eyebrow,
+.auth-field label,
+.auth-rail span {
+  font-family: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.74rem;
+}
+
+.auth-kicker {
+  margin: 0;
+  color: var(--auth-accent-deep);
+}
+
+.auth-page--ink .auth-kicker {
+  color: #ffbf84;
+}
+
+.auth-title {
+  margin: 0;
+  max-width: 12ch;
+  font-family: "Baskerville", "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: clamp(3.2rem, 5vw, 5.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.auth-copy {
+  margin: 0;
+  max-width: 35rem;
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: var(--auth-muted);
+}
+
+.auth-page--ink .auth-copy {
+  color: rgba(247, 240, 230, 0.8);
+}
+
+.auth-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 48rem;
+}
+
+.auth-metric,
+.auth-rail div {
+  border: 1px solid var(--auth-line);
+  background: rgba(255, 255, 255, 0.45);
+  padding: 1rem 1rem 1.15rem;
+  backdrop-filter: blur(6px);
+}
+
+.auth-page--ink .auth-rail div {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.auth-metric strong,
+.auth-rail p {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.auth-rail {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 30rem;
+}
+
+.auth-rail span {
+  color: #ffbf84;
+}
+
+.auth-rail p {
+  margin: 0.45rem 0 0;
+  color: rgba(247, 240, 230, 0.88);
+}
+
+.auth-card {
+  width: min(32rem, 100%);
+  padding: 2rem;
+  border: 1px solid rgba(53, 41, 31, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 250, 242, 0.9)),
+    var(--auth-paper);
+  box-shadow: var(--auth-shadow);
+  backdrop-filter: blur(12px);
+  animation: auth-rise 0.5s ease-out both;
+}
+
+.auth-card__header h2 {
+  margin: 0.3rem 0 0.55rem;
+  font-family: "Baskerville", "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.auth-card__header p:last-child {
+  margin: 0;
+  color: var(--auth-muted);
+  line-height: 1.6;
+}
+
+.auth-banner,
+.auth-status {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--auth-line);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.auth-banner--success,
+.auth-status[data-tone="success"] {
+  color: var(--auth-success);
+  background: rgba(31, 106, 78, 0.08);
+  border-color: rgba(31, 106, 78, 0.2);
+}
+
+.auth-status[data-tone="error"] {
+  color: var(--auth-error);
+  background: rgba(163, 58, 47, 0.08);
+  border-color: rgba(163, 58, 47, 0.18);
+}
+
+.auth-form {
+  margin-top: 1.4rem;
+}
+
+.auth-field {
+  margin-bottom: 1rem;
+}
+
+.auth-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.auth-field input {
+  width: 100%;
+  border: 1px solid rgba(53, 41, 31, 0.16);
+  border-radius: 0;
+  padding: 0.95rem 1rem;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--auth-ink);
+  font: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-field input:focus {
+  outline: none;
+  border-color: var(--auth-accent);
+  box-shadow: 0 0 0 4px rgba(197, 90, 17, 0.12);
+  transform: translateY(-1px);
+}
+
+.auth-field__hint {
+  margin: 0.45rem 0 0;
+  color: var(--auth-muted);
+  font-size: 0.9rem;
+}
+
+.auth-form__footer {
+  margin-top: 1.6rem;
+}
+
+.auth-button {
+  width: 100%;
+  border: none;
+  padding: 1rem 1.2rem;
+  background: linear-gradient(135deg, var(--auth-accent), var(--auth-accent-deep));
+  color: #fff8f1;
+  cursor: pointer;
+  font-family: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+  font-size: 0.88rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.auth-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(142, 53, 16, 0.24);
+}
+
+.auth-button:disabled {
+  cursor: progress;
+  opacity: 0.8;
+}
+
+.auth-switch {
+  margin: 0.95rem 0 0;
+  color: var(--auth-muted);
+  line-height: 1.5;
+}
+
+.auth-switch a {
+  color: var(--auth-accent-deep);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+}
+
+.auth-token {
+  margin-top: 1.2rem;
+  padding: 1rem;
+  border: 1px solid var(--auth-line);
+  background: rgba(31, 27, 24, 0.035);
+}
+
+.auth-token__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.auth-token__header h3 {
+  margin: 0.3rem 0 0;
+  font-size: 1rem;
+}
+
+.auth-token__copy {
+  border: 1px solid rgba(53, 41, 31, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.55rem 0.8rem;
+  cursor: pointer;
+  font-family: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.auth-token__value {
+  margin: 1rem 0 0.7rem;
+  overflow-x: auto;
+  padding: 1rem;
+  background: #201a16;
+  color: #fce6c8;
+  font-family: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.auth-token__hint {
+  margin: 0;
+  color: var(--auth-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+@keyframes auth-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 980px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-page__panel {
+    padding: 2rem 1.35rem;
+  }
+
+  .auth-page__panel--story::after {
+    inset: 1rem;
+    border-right: 1px solid var(--auth-line);
+  }
+
+  .auth-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-card {
+    padding: 1.4rem;
+  }
+
+  .auth-title {
+    max-width: none;
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .auth-token__header {
+    flex-direction: column;
+  }
+}

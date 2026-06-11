@@ -1,0 +1,90 @@
+<% content_for :title, "Sign Up | DLQ Control Center" %>
+
+<main class="auth-page auth-page--ink">
+  <section class="auth-page__panel auth-page__panel--story">
+    <p class="auth-kicker">DLQ Control Center</p>
+    <h1 class="auth-title">Build the operator console before the incident hits.</h1>
+    <p class="auth-copy">
+      This first account opens the door to organization setup, project boundaries, and the rest
+      of the recovery workflow. Start with a durable admin identity.
+    </p>
+
+    <div class="auth-rail">
+      <div>
+        <span>01</span>
+        <p>Create the first user</p>
+      </div>
+      <div>
+        <span>02</span>
+        <p>Create an organization</p>
+      </div>
+      <div>
+        <span>03</span>
+        <p>Start shaping the failure inbox</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="auth-page__panel auth-page__panel--form">
+    <div class="auth-card">
+      <div class="auth-card__header">
+        <p class="auth-card__eyebrow">First access</p>
+        <h2>Create your account</h2>
+        <p>
+          Use a strong password. The current auth layer is JWT-based, so sign up creates the user
+          and then hands off to login.
+        </p>
+      </div>
+
+      <%= form_with url: signup_path,
+                    scope: :sign_up,
+                    class: "auth-form",
+                    data: {
+                      action: "submit->auth-form#submit",
+                      controller: "auth-form",
+                      auth_form_mode_value: "signup",
+                      auth_form_redirect_url_value: login_page_path(created: 1),
+                      auth_form_action_label_value: "Create Account",
+                      turbo: false
+                    } do |form| %>
+        <div class="auth-field">
+          <%= form.label :name, "Full name" %>
+          <%= form.text_field :name,
+                              required: true,
+                              autocomplete: "name",
+                              placeholder: "Jordan Lee" %>
+        </div>
+
+        <div class="auth-field">
+          <%= form.label :email, "Email" %>
+          <%= form.email_field :email,
+                               required: true,
+                               autocomplete: "email",
+                               placeholder: "jordan@company.com" %>
+        </div>
+
+        <div class="auth-field">
+          <%= form.label :password, "Password" %>
+          <%= form.password_field :password,
+                                  required: true,
+                                  minlength: 12,
+                                  autocomplete: "new-password",
+                                  placeholder: "Minimum 12 characters" %>
+          <p class="auth-field__hint">Use at least 12 characters.</p>
+        </div>
+
+        <div class="auth-form__footer">
+          <button type="submit" class="auth-button" data-auth-form-target="submitButton">
+            Create Account
+          </button>
+          <p class="auth-switch">
+            Already have access?
+            <%= link_to "Log in", login_page_path %>
+          </p>
+        </div>
+
+        <div class="auth-status" data-auth-form-target="status" hidden></div>
+      <% end %>
+    </div>
+  </section>
+</main>

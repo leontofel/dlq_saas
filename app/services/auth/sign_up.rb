@@ -14,16 +14,14 @@ module Auth
     end
 
     def call
-      password_digest = BCrypt::Password.create(@password)
-
-      user = User.create(
+      user = User.new(
         email: normalized_email,
-        password_digest: password_digest,
+        password: @password,
         name: @name,
         status: "active"
       )
 
-      return failure("Error creating user") unless user.persisted?
+      return failure(user.errors.full_messages.to_sentence) unless user.save
 
       Result.new(
         success?: true,

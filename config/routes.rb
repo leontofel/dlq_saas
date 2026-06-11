@@ -9,9 +9,11 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
+  root "auth_pages#login"
 
+  get "/login", to: "auth_pages#login", as: :login_page
+  get "/signup", to: "auth_pages#sign_up", as: :signup_page
 
-  post "/login", to: "auth#login"
-  post "/signup", to: "auth#sign_up"
+  post "/login", to: "auth#login", as: :login
+  post "/signup", to: "auth#sign_up", as: :signup
 end
