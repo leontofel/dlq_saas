@@ -1,2 +1,23 @@
-#!/usr/bin/env ruby
-exec "./bin/rails", "server", *ARGV
+#!/usr/bin/env sh
+set -eu
+
+# Default to port 3000 if not specified
+export PORT="${PORT:-3000}"
+
+# Let the debug gem allow remote connections,
+# but avoid loading until `debugger` is called
+export RUBY_DEBUG_OPEN="true"
+export RUBY_DEBUG_LAZY="true"
+
+cleanup() {
+  if [ -n "${CSS_PID:-}" ]; then
+    kill "$CSS_PID" 2>/dev/null || true
+  fi
+}
+
+trap cleanup EXIT INT TERM
+
+bin/rails tailwindcss:watch &
+CSS_PID=$!
+
+exec "./bin/rails" server "$@"

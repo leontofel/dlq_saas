@@ -18,12 +18,74 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="min-h-screen bg-stone-50 text-stone-950">
+    <% if signed_in? %>
+      <div class="min-h-screen">
+        <header class="border-b border-stone-200 bg-white/90 backdrop-blur">
+          <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4">
+            <div>
+              <%= link_to "DLQ Control Center", root_path, class: "text-lg font-semibold tracking-tight text-stone-900" %>
+              <p class="mt-1 text-sm text-stone-500">
+                <%= current_organization&.name || "Choose an organization to start shaping the tenant boundary." %>
+                <% if current_project %>
+                  <span class="text-stone-300">/</span>
+                  <%= current_project.name %>
+                <% end %>
+              </p>
+            </div>
+
+            <nav class="flex items-center gap-5 text-sm font-medium text-stone-600">
+              <%= link_to "Overview", overview_path, class: "transition hover:text-stone-950" %>
+              <%= link_to "Organizations", organizations_path, class: "transition hover:text-stone-950" %>
+              <% if current_organization %>
+                <%= link_to "Projects", organization_projects_path(current_organization), class: "transition hover:text-stone-950" %>
+              <% end %>
+            </nav>
+
+            <div class="flex items-center gap-3 text-sm">
+              <div class="text-right">
+                <p class="font-medium text-stone-900"><%= current_user.name %></p>
+                <p class="text-stone-500"><%= current_user.email %></p>
+              </div>
+              <%= button_to "Log out", logout_path, method: :delete,
+                            class: "rounded-lg border border-stone-300 px-3 py-2 font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-950" %>
+            </div>
+          </div>
+        </header>
+
+        <main class="mx-auto max-w-7xl px-6 py-8">
+          <% if flash[:notice].present? || flash[:alert].present? %>
+            <div class="mb-6 space-y-3">
+              <% if flash[:notice].present? %>
+                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"><%= flash[:notice] %></div>
+              <% end %>
+              <% if flash[:alert].present? %>
+                <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800"><%= flash[:alert] %></div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <%= yield %>
+        </main>
+      </div>
+    <% else %>
+      <% if flash[:notice].present? || flash[:alert].present? %>
+        <div class="fixed inset-x-0 top-0 z-50 mx-auto max-w-3xl px-4 pt-4">
+          <% if flash[:notice].present? %>
+            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 shadow-sm"><%= flash[:notice] %></div>
+          <% end %>
+          <% if flash[:alert].present? %>
+            <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 shadow-sm"><%= flash[:alert] %></div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    <% end %>
   </body>
 </html>

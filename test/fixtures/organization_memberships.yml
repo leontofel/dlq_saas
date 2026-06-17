@@ -1,11 +1,19 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+acme_owner:
+  organization: acme
+  user: owner_user
+  role: owner
 
-one:
-  organization: one
-  user: one
-  role: MyString
+acme_viewer:
+  organization: acme
+  user: viewer_user
+  role: viewer
 
-two:
-  organization: two
-  user: two
-  role: MyString
+acme_operator:
+  organization: acme
+  user: operator_user
+  role: operator
+
+beta_owner:
+  organization: beta
+  user: outsider_user
+  role: owner

@@ -1,21 +1,19 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  project: one
-  created_by_user_id: 1
-  name: MyString
-  key_prefix: MyString
-  key_digest: MyString
-  scopes_text: MyText
+active_orders_key:
+  project: acme_orders
+  created_by_user: owner_user
+  name: Orders ingest
+  key_prefix: dlq_live_existing001
+  key_digest: <%= ProjectApiKey.digest("dlq_live_existing_secret") %>
+  scopes_text: '["messages:write"]'
   last_used_at: 2026-06-07 14:45:51
-  revoked_at: 2026-06-07 14:45:51
+  revoked_at:
 
-two:
-  project: two
-  created_by_user_id: 1
-  name: MyString
-  key_prefix: MyString
-  key_digest: MyString
-  scopes_text: MyText
+revoked_orders_key:
+  project: acme_orders
+  created_by_user: owner_user
+  name: Old orders ingest
+  key_prefix: dlq_live_existing002
+  key_digest: <%= ProjectApiKey.digest("dlq_live_revoked_secret") %>
+  scopes_text: '["messages:write"]'
   last_used_at: 2026-06-07 14:45:51
   revoked_at: 2026-06-07 14:45:51

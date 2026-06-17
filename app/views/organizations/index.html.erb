@@ -1,0 +1,59 @@
+<section class="space-y-6">
+  <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+    <p class="text-sm font-medium uppercase tracking-[0.18em] text-stone-500">Organizations</p>
+    <h1 class="mt-3 text-3xl font-semibold tracking-tight text-stone-950">Tenant and access management</h1>
+    <p class="mt-3 max-w-3xl text-sm leading-7 text-stone-600">
+      Each organization creates an isolated workspace for projects, operators, and ingestion keys.
+    </p>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
+    <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+      <h2 class="text-xl font-semibold text-stone-950">Your organizations</h2>
+      <% if @organizations.any? %>
+        <div class="mt-5 space-y-4">
+          <% @organizations.each do |organization| %>
+            <%= link_to organization_path(organization),
+                        class: "block rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 transition hover:border-stone-300 hover:bg-white" do %>
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <h3 class="text-base font-semibold text-stone-950"><%= organization.name %></h3>
+                  <p class="mt-1 text-sm text-stone-500"><%= organization.slug %> · <%= organization.projects.count %> project(s)</p>
+                </div>
+                <span class="rounded-full bg-stone-200 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-stone-700"><%= current_user.role_for(organization) %></span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="mt-5 rounded-2xl border border-dashed border-stone-300 bg-stone-50 px-5 py-6 text-sm text-stone-600">
+          No organizations exist yet for this account.
+        </p>
+      <% end %>
+    </div>
+
+    <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+      <h2 class="text-xl font-semibold text-stone-950">Create organization</h2>
+      <p class="mt-2 text-sm leading-7 text-stone-600">
+        The creator becomes the first <code>owner</code>.
+      </p>
+
+      <%= form_with url: organizations_path, scope: :organization, class: "mt-5 space-y-4" do |form| %>
+        <div>
+          <%= form.label :name, "Name", class: "block text-sm font-medium text-stone-700" %>
+          <%= form.text_field :name, required: true, value: params.dig(:organization, :name),
+                              class: "mt-2 w-full rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none ring-0 transition focus:border-stone-900" %>
+        </div>
+
+        <div>
+          <%= form.label :slug, "Slug", class: "block text-sm font-medium text-stone-700" %>
+          <%= form.text_field :slug, value: params.dig(:organization, :slug),
+                              class: "mt-2 w-full rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none ring-0 transition focus:border-stone-900" %>
+        </div>
+
+        <%= form.submit "Create organization",
+                        class: "rounded-2xl bg-stone-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-stone-800" %>
+      <% end %>
+    </div>
+  </div>
+</section>

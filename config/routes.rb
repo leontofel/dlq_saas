@@ -9,11 +9,31 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  root "auth_pages#login"
+  root "dashboard#show"
+  get "/overview", to: "dashboard#show", as: :overview
+  get "/ready", to: "api/system#ready", defaults: { format: :json }
 
   get "/login", to: "auth_pages#login", as: :login_page
   get "/signup", to: "auth_pages#sign_up", as: :signup_page
 
-  post "/login", to: "auth#login", as: :login
-  post "/signup", to: "auth#sign_up", as: :signup
+  post "/login", to: "sessions#create", as: :login
+  post "/signup", to: "registrations#create", as: :signup
+  delete "/logout", to: "sessions#destroy", as: :logout
+
+  resources :organizations, only: %i[index show create] do
+    resources :organization_memberships, only: :create
+    resources :projects, only: %i[index create]
+  end
+
+  resources :projects, only: :show do
+    resources :project_api_keys, only: :create
+  end
+
+  patch "/project_api_keys/:id/revoke", to: "project_api_keys#revoke", as: :revoke_project_api_key
+
+  namespace :api, defaults: { format: :json } do
+    post "/login", to: "auth#login"
+    post "/signup", to: "auth#sign_up"
+    get "/ready", to: "system#ready"
+  end
 end

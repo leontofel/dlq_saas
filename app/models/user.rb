@@ -1,6 +1,14 @@
 class User < ApplicationRecord
   has_secure_password
 
+  has_many :organization_memberships, dependent: :destroy
+  has_many :organizations, through: :organization_memberships
+  has_many :created_project_api_keys,
+           class_name: "ProjectApiKey",
+           foreign_key: :created_by_user_id,
+           inverse_of: :created_by_user,
+           dependent: :restrict_with_exception
+
   before_validation :normalize_email
 
   validates :name, presence: true
@@ -14,6 +22,16 @@ class User < ApplicationRecord
 
   validates :status,
             inclusion: { in: %w[active disabled] }
+
+  scope :active, -> { where(status: "active") }
+
+  def membership_for(organization)
+    organization_memberships.find_by(organization: organization)
+  end
+
+  def role_for(organization)
+    membership_for(organization)&.role
+  end
 
   private
 

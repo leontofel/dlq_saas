@@ -14,25 +14,18 @@ module Auth
     end
 
     def call
-      user = User.authenticate_by(
-        email: normalized_email,
-        password: @password
-      )
+      result = Auth::Authenticate.call(email: @email, password: @password)
 
-      return failure("Invalid email or password") unless user&.status == "active"
+      return failure(result.error) unless result.success?
 
       Result.new(
         success?: true,
-        user: user,
-        token: JwtService.encode(user_id: user.id)
+        user: result.user,
+        token: JwtService.encode(user_id: result.user.id)
       )
     end
 
     private
-
-    def normalized_email
-      @email.to_s.strip.downcase
-    end
 
     def failure(message)
       Result.new(

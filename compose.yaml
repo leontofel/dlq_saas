@@ -1,0 +1,19 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bash -lc "bin/setup --skip-server && bin/dev"
+    environment:
+      PORT: 3000
+      RAILS_ENV: development
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/rails
+      - bundle:/usr/local/bundle
+
+volumes:
+  bundle:
