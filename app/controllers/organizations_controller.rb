@@ -8,7 +8,6 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    set_current_organization(@organization)
     @projects = @organization.projects.order(:name)
     @memberships = @organization.organization_memberships.includes(:user).order(:created_at)
   end
@@ -28,7 +27,7 @@ class OrganizationsController < ApplicationController
   private
 
   def set_organization
-    @organization = Organization.visible_to(current_user).find(params[:id])
+    @organization = load_organization(params[:id])
   end
 
   def organization_create_params

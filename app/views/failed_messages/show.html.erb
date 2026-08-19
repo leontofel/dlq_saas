@@ -1,0 +1,115 @@
+<section class="space-y-6">
+  <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <p class="text-sm font-medium uppercase tracking-[0.18em] text-stone-500">Failed message</p>
+        <h1 class="mt-2 text-3xl font-semibold tracking-tight text-stone-950"><%= @detail.failed_message.event_type %></h1>
+        <p class="mt-2 text-sm leading-7 text-stone-600">
+          <%= @detail.failed_message.source.name %> · <%= @detail.failed_message.queue_name %> ·
+          status <code><%= @detail.failed_message.status %></code> · attempts <%= @detail.failed_message.attempt_count %>
+        </p>
+      </div>
+      <%= link_to "Back to inbox", project_failed_messages_path(@project),
+                  class: "rounded-xl border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-950" %>
+    </div>
+
+    <% if current_membership.at_least?(:operator) %>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <% FailedMessage::STATUSES.each do |status| %>
+          <%= button_to status.titleize, status_project_failed_message_path(@project, @detail.failed_message),
+                        method: :patch,
+                        params: { status: status },
+                        class: "rounded-xl border border-stone-300 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] #{status == @detail.failed_message.status ? 'border-stone-900 bg-stone-900 text-white' : 'text-stone-700 transition hover:border-stone-400 hover:text-stone-950'}" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+    <div class="space-y-6">
+      <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+        <h2 class="text-xl font-semibold text-stone-950">Summary</h2>
+        <dl class="mt-5 space-y-3 text-sm text-stone-600">
+          <div class="flex justify-between gap-4">
+            <dt>Fingerprint</dt>
+            <dd class="text-right"><code><%= @detail.failed_message.fingerprint %></code></dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt>Correlation ID</dt>
+            <dd class="text-right"><%= @detail.failed_message.correlation_id.presence || "none" %></dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt>Tenant identifier</dt>
+            <dd class="text-right"><%= @detail.failed_message.tenant_identifier.presence || "none" %></dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt>First failed</dt>
+            <dd class="text-right"><%= @detail.failed_message.first_failed_at %></dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt>Last failed</dt>
+            <dd class="text-right"><%= @detail.failed_message.last_failed_at %></dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt>Latest failure type</dt>
+            <dd class="text-right"><%= @detail.failed_message.failure_type_latest %></dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+        <h2 class="text-xl font-semibold text-stone-950">Attempt history</h2>
+        <div class="mt-5 space-y-4">
+          <% @detail.failure_attempts.each do |attempt| %>
+            <div class="rounded-2xl border border-stone-200 bg-stone-50 p-4">
+              <div class="flex items-center justify-between gap-4">
+                <p class="font-semibold text-stone-900">Attempt <%= attempt.attempt_number %></p>
+                <p class="text-sm text-stone-500"><%= attempt.occurred_at %></p>
+              </div>
+              <p class="mt-2 text-sm font-medium text-stone-700"><%= attempt.failure_type %></p>
+              <p class="mt-2 text-sm leading-7 text-stone-600"><%= attempt.failure_message %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+        <h2 class="text-xl font-semibold text-stone-950">Stored payload</h2>
+        <pre class="mt-5 overflow-x-auto rounded-2xl bg-stone-950 px-4 py-4 text-sm text-stone-100"><%= @detail.failed_message.pretty_payload_original_text %></pre>
+      </div>
+
+      <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+        <h2 class="text-xl font-semibold text-stone-950">Metadata</h2>
+        <pre class="mt-5 overflow-x-auto rounded-2xl bg-stone-950 px-4 py-4 text-sm text-stone-100"><%= @detail.failed_message.pretty_metadata_text || "{}" %></pre>
+      </div>
+
+      <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+        <h2 class="text-xl font-semibold text-stone-950">Notes</h2>
+        <% if current_membership.at_least?(:operator) %>
+          <%= form_with url: project_failed_message_message_notes_path(@project, @detail.failed_message), scope: :message_note, class: "mt-5 space-y-4" do |form| %>
+            <div>
+              <%= form.text_area :body, rows: 4, value: @detail.message_note.body,
+                                 class: "w-full rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+            </div>
+            <%= form.submit "Add note",
+                            class: "rounded-2xl bg-stone-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-stone-800" %>
+          <% end %>
+        <% end %>
+
+        <div class="mt-5 space-y-4">
+          <% @detail.message_notes.each do |note| %>
+            <div class="rounded-2xl border border-stone-200 bg-stone-50 p-4">
+              <div class="flex items-center justify-between gap-4">
+                <p class="font-semibold text-stone-900"><%= note.author_user.name %></p>
+                <p class="text-sm text-stone-500"><%= note.created_at %></p>
+              </div>
+              <p class="mt-2 text-sm leading-7 text-stone-600"><%= note.body %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

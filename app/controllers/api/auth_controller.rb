@@ -1,6 +1,6 @@
 module Api
   class AuthController < BaseController
-    skip_before_action :authenticate_user!, only: %i[login sign_up]
+    skip_before_action :authenticate_identity!, only: %i[login sign_up]
 
     def login
       result = Auth::Login.call(**login_params)

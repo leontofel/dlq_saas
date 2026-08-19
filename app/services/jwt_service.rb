@@ -4,7 +4,7 @@ class JwtService
   AUDIENCE="dlq_saas_api"
   EXPIRATION=15.minutes
 
-  def self.encode(user_id)
+  def self.encode(user_id:)
     issued_at = Time.current.to_i
 
     payload = {

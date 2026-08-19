@@ -1,5 +1,5 @@
 class AuthPagesController < ApplicationController
-  skip_before_action :authenticate_user!
+  skip_before_action :authenticate_identity!
   before_action :redirect_if_authenticated
 
   def login; end

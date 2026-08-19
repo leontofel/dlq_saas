@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_07_174629) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_19_195500) do
   create_table "alert_deliveries", force: :cascade do |t|
     t.integer "alert_rule_id", null: false
     t.integer "attempt_count", default: 0, null: false
@@ -87,6 +87,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_174629) do
     t.string "latest_replay_status"
     t.text "metadata_text"
     t.datetime "payload_expires_at"
+    t.string "payload_identity_digest"
     t.text "payload_original_text", null: false
     t.integer "payload_size_bytes", null: false
     t.integer "project_id", null: false
@@ -224,6 +225,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_174629) do
     t.text "scopes_text", null: false
     t.datetime "updated_at", null: false
     t.index ["created_by_user_id"], name: "index_project_api_keys_on_created_by_user_id"
+    t.index ["key_prefix"], name: "index_project_api_keys_on_key_prefix"
     t.index ["project_id", "key_prefix"], name: "index_project_api_keys_on_project_id_and_key_prefix", unique: true
     t.index ["project_id", "revoked_at"], name: "index_project_api_keys_on_project_id_and_revoked_at"
     t.index ["project_id"], name: "index_project_api_keys_on_project_id"

@@ -1,13 +1,13 @@
 require "test_helper"
 
 class ApiBaselineTest < ActionDispatch::IntegrationTest
-  fixtures :users
-
   test "api login returns jwt payload" do
+    user = create_user
+
     post "/api/login",
          params: {
            login: {
-             email: users(:owner_user).email,
+             email: user.email,
              password: "password-1234"
            }
          },
@@ -17,7 +17,7 @@ class ApiBaselineTest < ActionDispatch::IntegrationTest
 
     payload = JSON.parse(response.body)
     assert payload["access_token"].present?
-    assert_equal users(:owner_user).email, payload.dig("user", "email")
+    assert_equal user.email, payload.dig("user", "email")
   end
 
   test "ready endpoint returns ok" do

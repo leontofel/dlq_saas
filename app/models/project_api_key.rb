@@ -29,9 +29,8 @@ class ProjectApiKey < ApplicationRecord
     revoked_at.present?
   end
 
-  def self.digest(raw_key)
-    secret = Rails.application.secret_key_base
-    OpenSSL::HMAC.hexdigest("SHA256", secret, raw_key)
+  def includes_scope?(scope)
+    scopes.include?(scope.to_s)
   end
 
   private

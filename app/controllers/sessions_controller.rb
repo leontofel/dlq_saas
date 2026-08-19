@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_action :authenticate_user!, only: :create
+  skip_before_action :authenticate_identity!, only: :create
 
   def create
     result = Auth::Authenticate.call(**login_params)

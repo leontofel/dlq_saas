@@ -1,10 +1,9 @@
 require "test_helper"
 
 class OrganizationsFlowTest < ActionDispatch::IntegrationTest
-  fixtures :users, :organizations, :organization_memberships, :projects
-
   test "signed in user can create an organization and becomes owner" do
-    sign_in_as(users(:viewer_user))
+    user = create_user
+    sign_in_as(user)
 
     assert_difference("Organization.count", 1) do
       assert_difference("OrganizationMembership.count", 1) do
@@ -20,38 +19,43 @@ class OrganizationsFlowTest < ActionDispatch::IntegrationTest
     end
 
     organization = Organization.find_by!(slug: "gamma-systems")
-    membership = OrganizationMembership.find_by!(organization: organization, user: users(:viewer_user))
+    membership = OrganizationMembership.find_by!(organization: organization, user: user)
 
     assert_equal "owner", membership.role
     assert_redirected_to organization_path(organization)
   end
 
   test "admin can add an existing member" do
-    sign_in_as(users(:owner_user))
+    tenant = create_tenant(role: "admin")
+    new_member = create_user
+    sign_in_as(tenant.fetch(:user))
 
     assert_difference("OrganizationMembership.count", 1) do
-      post organization_organization_memberships_path(organizations(:acme)),
+      post organization_organization_memberships_path(tenant.fetch(:organization)),
            params: {
              organization_membership: {
-               email: users(:outsider_user).email,
+               email: new_member.email,
                role: "viewer"
              }
            },
            headers: modern_browser_headers
     end
 
-    assert_redirected_to organization_path(organizations(:acme))
-    assert_equal "viewer", OrganizationMembership.find_by!(organization: organizations(:acme), user: users(:outsider_user)).role
+    assert_redirected_to organization_path(tenant.fetch(:organization))
+    membership = OrganizationMembership.find_by!(organization: tenant.fetch(:organization), user: new_member)
+    assert_equal "viewer", membership.role
   end
 
   test "viewer cannot add a member" do
-    sign_in_as(users(:viewer_user))
+    tenant = create_tenant(role: "viewer")
+    outsider = create_user
+    sign_in_as(tenant.fetch(:user))
 
     assert_no_difference("OrganizationMembership.count") do
-      post organization_organization_memberships_path(organizations(:acme)),
+      post organization_organization_memberships_path(tenant.fetch(:organization)),
            params: {
              organization_membership: {
-               email: users(:outsider_user).email,
+               email: outsider.email,
                role: "viewer"
              }
            },

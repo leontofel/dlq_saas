@@ -63,6 +63,33 @@ No extra environment variables are required for the default local setup.
 
 - JWT signing falls back to the local credentials or a development fallback
 - `RAILS_MASTER_KEY` is only needed for environments that require encrypted credentials
+- `PAYLOAD_IDENTITY_HMAC_KEYS` accepts a key ring such as `2026-08=current-secret,2026-01=previous-secret`; retain old keys during rotation
+
+## Manual ingestion test
+
+Create an active source and a project API key with the `messages:write` scope, then POST a failed message:
+
+```bash
+curl -X POST http://localhost:3000/api/failed_messages \
+  -H "Authorization: Bearer dlq_live_your_secret_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "failed_message": {
+      "source": "orders-worker",
+      "dedup_identity_key": "order-123",
+      "queue_name": "orders",
+      "event_type": "order.created",
+      "payload": { "customer": { "email": "test@example.com" } },
+      "metadata": { "region": "us-east-1" },
+      "failure_type": "TimeoutError",
+      "failure_message": "downstream timed out",
+      "attempt_number": 1,
+      "occurred_at": "2026-07-01T12:00:00Z"
+    }
+  }'
+```
+
+Use the browser Inbox, Sources, and Redaction Rules pages from the project screen to inspect the stored message.
 
 ## Docker-based development
 

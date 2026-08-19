@@ -1,16 +1,23 @@
 require "test_helper"
 
 class ProjectApiKeyTest < ActiveSupport::TestCase
-  fixtures :users, :organizations, :organization_memberships, :projects, :project_api_keys
-
   test "parses scopes from JSON" do
-    assert_equal [ "messages:write" ], project_api_keys(:active_orders_key).scopes
+    tenant = create_tenant
+    issued = issue_project_api_key(project: tenant.fetch(:project), actor: tenant.fetch(:user))
+
+    assert_equal [ "messages:write" ], issued.project_api_key.scopes
   end
 
-  test "digests raw keys deterministically" do
-    digest = ProjectApiKey.digest("dlq_live_secret")
+  test "authenticates only active keys" do
+    tenant = create_tenant
+    issued = issue_project_api_key(project: tenant.fetch(:project), actor: tenant.fetch(:user))
 
-    assert_equal digest, ProjectApiKey.digest("dlq_live_secret")
-    assert_not_equal digest, ProjectApiKey.digest("dlq_live_other")
+    assert_equal issued.project_api_key,
+                 ProjectApiKeys::Lifecycle.authenticate(raw_key: issued.raw_key, required_scope: "messages:write")
+
+    ProjectApiKeys::Lifecycle.revoke(issued.project_api_key)
+
+    assert_nil ProjectApiKeys::Lifecycle.authenticate(raw_key: issued.raw_key)
+    assert_nil ProjectApiKeys::Lifecycle.authenticate(raw_key: "dlq_live_missing_secret")
   end
 end

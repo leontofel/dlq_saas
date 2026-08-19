@@ -285,6 +285,7 @@ Recommended columns:
 - `status :string, null: false, default: "open"`
 - `latest_replay_status :string`
 - `payload_original_text :text, null: false`
+- `payload_identity_digest :string`
 - `payload_size_bytes :integer, null: false`
 - `metadata_text :text`
 - `fingerprint :string, null: false`
@@ -320,6 +321,7 @@ Notes:
 - `dedup_identity_key` is a stable application-generated key used to represent a logical failed message
 - it should be derived from the best available identity data, typically source plus external message ID, with a controlled fallback when that ID is absent
 - `payload_original_text` and `metadata_text` hold JSON serialized as text
+- `payload_identity_digest` is a keyed digest of canonical raw JSON used to compare retries without storing secrets or depending on current redaction rules
 
 Allowed MVP message statuses:
 

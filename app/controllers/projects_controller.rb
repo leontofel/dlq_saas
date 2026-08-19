@@ -3,18 +3,14 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: :show
 
   def index
-    set_current_organization(@organization)
     @projects = @organization.projects.order(:name)
   end
 
   def show
-    set_current_project(@project)
-    @project_api_keys = @project.project_api_keys.order(created_at: :desc)
+    @project_api_keys = @project.project_api_keys.order(created_at: :desc) if current_membership.at_least?(:admin)
   end
 
   def create
-    return unless require_organization_role!(@organization, :admin).nil?
-
     result = Projects::Create.call(
       organization: @organization,
       attributes: project_params
@@ -23,7 +19,6 @@ class ProjectsController < ApplicationController
     if result.success?
       redirect_to project_path(result.project), notice: "Project created."
     else
-      set_current_organization(@organization)
       @projects = @organization.projects.order(:name)
       flash.now[:alert] = result.error
       render :index, status: :unprocessable_entity
@@ -33,13 +28,12 @@ class ProjectsController < ApplicationController
   private
 
   def set_organization_from_params
-    @organization = Organization.visible_to(current_user).find(params[:organization_id])
+    minimum_role = :admin if action_name == "create"
+    @organization = load_organization(params[:organization_id], minimum_role: minimum_role)
   end
 
   def set_project
-    @project = Project.joins(:organization)
-                      .merge(Organization.visible_to(current_user))
-                      .find(params[:id])
+    @project = load_project(params[:id])
   end
 
   def project_params

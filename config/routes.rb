@@ -26,14 +26,21 @@ Rails.application.routes.draw do
   end
 
   resources :projects, only: :show do
-    resources :project_api_keys, only: :create
+    resources :project_api_keys, only: :create do
+      patch :revoke, on: :member
+    end
+    resources :sources, only: %i[index create]
+    resources :redaction_rules, only: %i[index create]
+    resources :failed_messages, only: %i[index show] do
+      patch :status, on: :member, to: "failed_messages#update_status"
+      resources :message_notes, only: :create
+    end
   end
-
-  patch "/project_api_keys/:id/revoke", to: "project_api_keys#revoke", as: :revoke_project_api_key
 
   namespace :api, defaults: { format: :json } do
     post "/login", to: "auth#login"
     post "/signup", to: "auth#sign_up"
     get "/ready", to: "system#ready"
+    resources :failed_messages, only: :create
   end
 end

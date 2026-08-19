@@ -8,6 +8,15 @@ class User < ApplicationRecord
            foreign_key: :created_by_user_id,
            inverse_of: :created_by_user,
            dependent: :restrict_with_exception
+  has_many :message_notes,
+           class_name: "MessageNote",
+           foreign_key: :author_user_id,
+           inverse_of: :author_user,
+           dependent: :restrict_with_exception
+  has_many :message_payload_versions,
+           foreign_key: :created_by_user_id,
+           inverse_of: :created_by_user,
+           dependent: :restrict_with_exception
 
   before_validation :normalize_email
 

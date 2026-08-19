@@ -1,8 +1,6 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
-  fixtures :users
-
   test "normalizes email before validation" do
     user = User.new(
       email: "  MIXED@Example.COM ",

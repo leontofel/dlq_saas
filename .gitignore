@@ -33,6 +33,8 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+# Ignore repo-local tooling environments.
+/.graphify-venv/
 
 /app/assets/builds/*
 !/app/assets/builds/.keep

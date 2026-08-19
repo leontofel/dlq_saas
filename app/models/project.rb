@@ -1,6 +1,9 @@
 class Project < ApplicationRecord
   belongs_to :organization
   has_many :project_api_keys, dependent: :destroy
+  has_many :failed_messages, dependent: :destroy
+  has_many :sources, dependent: :destroy
+  has_many :redaction_rules, dependent: :destroy
 
   ENVIRONMENTS = %w[production staging development].freeze
   STATUSES = %w[active archived].freeze
@@ -17,6 +20,10 @@ class Project < ApplicationRecord
   before_validation :normalize_slug
 
   scope :active, -> { where(status: "active") }
+
+  def source_identifier_allowed?(identifier)
+    allowed_source_identifiers.empty? || allowed_source_identifiers.include?(identifier.to_s)
+  end
 
   def allowed_source_identifiers
     allowed_source_identifiers_text.to_s.lines.map(&:strip).reject(&:blank?).uniq

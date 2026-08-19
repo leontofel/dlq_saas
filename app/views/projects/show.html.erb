@@ -29,7 +29,7 @@
     </div>
   </div>
 
-  <% if flash[:new_api_key_secret].present? %>
+  <% if flash[:new_api_key_secret].present? && current_membership.at_least?(:admin) %>
     <div class="rounded-3xl border border-amber-200 bg-amber-50 p-6 shadow-sm">
       <p class="text-sm font-medium uppercase tracking-[0.18em] text-amber-700">Copy once</p>
       <h2 class="mt-2 text-xl font-semibold text-amber-950">New API key secret</h2>
@@ -41,7 +41,8 @@
   <% end %>
 
   <div class="grid gap-6 xl:grid-cols-[1fr_0.85fr]">
-    <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+    <% if current_membership.at_least?(:admin) %>
+      <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
       <div class="flex items-center justify-between gap-4">
         <div>
           <p class="text-sm font-medium uppercase tracking-[0.18em] text-stone-500">API keys</p>
@@ -71,7 +72,7 @@
                   <td class="px-4 py-3 text-stone-600"><%= project_api_key.revoked? ? "revoked" : "active" %></td>
                   <td class="px-4 py-3 text-right">
                     <% unless project_api_key.revoked? %>
-                      <%= button_to "Revoke", revoke_project_api_key_path(project_api_key),
+                      <%= button_to "Revoke", revoke_project_project_api_key_path(@project, project_api_key),
                                     method: :patch,
                                     class: "rounded-xl border border-rose-300 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-rose-700 transition hover:border-rose-400 hover:text-rose-900" %>
                     <% end %>
@@ -83,13 +84,15 @@
         </div>
       <% else %>
         <p class="mt-5 rounded-2xl border border-dashed border-stone-300 bg-stone-50 px-5 py-6 text-sm text-stone-600">
-          No API keys yet. Create one to prepare the future ingestion boundary.
+          No API keys yet. Create one to open the ingestion endpoint for this project.
         </p>
       <% end %>
-    </div>
+      </div>
+    <% end %>
 
     <div class="space-y-6">
-      <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+      <% if current_membership.at_least?(:admin) %>
+        <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
         <h2 class="text-xl font-semibold text-stone-950">Create API key</h2>
         <p class="mt-2 text-sm leading-7 text-stone-600">
           Only the digest is stored. The raw secret is revealed once after creation.
@@ -108,28 +111,25 @@
               <%= check_box_tag "project_api_key[scopes][]", "messages:write",
                                 Array(params.dig(:project_api_key, :scopes)).exclude?("").presence || true,
                                 class: "h-4 w-4 rounded border-stone-300 text-stone-900 focus:ring-stone-900" %>
-              <span><code>messages:write</code> for future ingestion</span>
+              <span><code>messages:write</code> for failed-message ingestion</span>
             </label>
           </div>
 
           <%= form.submit "Create API key",
                           class: "rounded-2xl bg-stone-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-stone-800" %>
         <% end %>
-      </div>
+        </div>
+      <% end %>
 
       <div class="rounded-3xl border border-stone-200 bg-stone-900 p-6 text-stone-100 shadow-sm">
-        <p class="text-sm font-medium uppercase tracking-[0.18em] text-stone-400">Allowed sources</p>
-        <% if @project.allowed_source_identifiers.any? %>
-          <ul class="mt-4 space-y-2 text-sm text-stone-200">
-            <% @project.allowed_source_identifiers.each do |identifier| %>
-              <li><code><%= identifier %></code></li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="mt-4 text-sm leading-7 text-stone-200">
-            No source identifiers are restricted yet.
-          </p>
-        <% end %>
+        <p class="text-sm font-medium uppercase tracking-[0.18em] text-stone-400">Sprint 2 surfaces</p>
+        <div class="mt-4 space-y-3 text-sm">
+          <%= link_to "Open inbox", project_failed_messages_path(@project), class: "block rounded-2xl border border-stone-700 px-4 py-3 text-stone-100 transition hover:border-stone-500" %>
+          <% if current_membership.at_least?(:admin) %>
+            <%= link_to "Manage sources", project_sources_path(@project), class: "block rounded-2xl border border-stone-700 px-4 py-3 text-stone-100 transition hover:border-stone-500" %>
+            <%= link_to "Manage redaction rules", project_redaction_rules_path(@project), class: "block rounded-2xl border border-stone-700 px-4 py-3 text-stone-100 transition hover:border-stone-500" %>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

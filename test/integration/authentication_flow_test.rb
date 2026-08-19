@@ -1,8 +1,6 @@
 require "test_helper"
 
 class AuthenticationFlowTest < ActionDispatch::IntegrationTest
-  fixtures :users
-
   test "anonymous users are redirected to login for the dashboard" do
     get root_path, headers: modern_browser_headers
 
@@ -29,7 +27,7 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
   end
 
   test "user can sign in and sign out" do
-    sign_in_as(users(:owner_user))
+    sign_in_as(create_user)
 
     assert_redirected_to root_path
     follow_redirect!

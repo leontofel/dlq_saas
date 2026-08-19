@@ -45,6 +45,13 @@
               <% if current_organization %>
                 <%= link_to "Projects", organization_projects_path(current_organization), class: "transition hover:text-stone-950" %>
               <% end %>
+              <% if current_project %>
+                <%= link_to "Inbox", project_failed_messages_path(current_project), class: "transition hover:text-stone-950" %>
+                <% if current_membership.at_least?(:admin) %>
+                  <%= link_to "Sources", project_sources_path(current_project), class: "transition hover:text-stone-950" %>
+                  <%= link_to "Rules", project_redaction_rules_path(current_project), class: "transition hover:text-stone-950" %>
+                <% end %>
+              <% end %>
             </nav>
 
             <div class="flex items-center gap-3 text-sm">

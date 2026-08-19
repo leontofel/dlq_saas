@@ -1,12 +1,11 @@
 require "test_helper"
 
 class OrganizationTest < ActiveSupport::TestCase
-  fixtures :users, :organizations, :organization_memberships
-
   test "visible_to scopes organizations by membership" do
-    organizations = Organization.visible_to(users(:owner_user))
+    tenant = create_tenant
+    organizations = Organization.visible_to(tenant.fetch(:user))
 
-    assert_equal [ organizations(:acme) ], organizations.to_a
+    assert_equal [ tenant.fetch(:organization) ], organizations.to_a
   end
 
   test "normalizes slug" do

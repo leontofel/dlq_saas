@@ -1,24 +1,26 @@
 module Api
   class BaseController < ActionController::API
-    before_action :authenticate_user!
+    before_action :authenticate_identity!
 
-    attr_reader :current_user
+    attr_reader :current_principal
+
+    def current_user
+      current_principal&.user
+    end
 
     private
 
-    def authenticate_user!
-      payload = JwtService.decode(bearer_token!)
-      @current_user = User.active.find(payload.fetch("sub"))
-    rescue JWT::DecodeError, ActiveRecord::RecordNotFound, KeyError
+    def authenticate_identity!
+      @current_principal = RequestIdentity.resolve(
+        credentials: request.authorization,
+        adapter: identity_adapter
+      )
+    rescue RequestIdentity::Unauthorized
       render_error("Unauthorized", :unauthorized)
     end
 
-    def bearer_token!
-      scheme, token = request.authorization.to_s.split(" ", 2)
-
-      raise JWT::DecodeError, "Missing Bearer token" unless scheme == "Bearer" && token.present?
-
-      token
+    def identity_adapter
+      RequestIdentity::Adapters::Jwt.new
     end
 
     def render_error(message, status, details = nil)

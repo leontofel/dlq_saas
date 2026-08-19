@@ -1,0 +1,92 @@
+<section class="space-y-6">
+  <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-sm font-medium uppercase tracking-[0.18em] text-stone-500">Inbox</p>
+        <h1 class="mt-2 text-3xl font-semibold tracking-tight text-stone-950">Failed message inbox</h1>
+        <p class="mt-2 text-sm leading-7 text-stone-600">
+          Filter the latest failures without joining raw attempt rows in your head.
+        </p>
+      </div>
+      <% if current_membership.at_least?(:admin) %>
+        <div class="flex gap-3">
+          <%= link_to "Sources", project_sources_path(@project),
+                      class: "rounded-xl border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-950" %>
+          <%= link_to "Redaction rules", project_redaction_rules_path(@project),
+                      class: "rounded-xl border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-950" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+    <%= form_with url: project_failed_messages_path(@project), method: :get, local: true, class: "grid gap-4 lg:grid-cols-3" do |form| %>
+      <%= form.select :status, options_for_select([["All statuses", ""]] + FailedMessage::STATUSES.map { |status| [status.titleize, status] }, params[:status]),
+                      {}, class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+      <%= form.select :source_id, options_for_select([["All sources", ""]] + @sources.map { |source| [source.name, source.id] }, params[:source_id]),
+                      {}, class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+      <%= form.text_field :queue_name, placeholder: "Queue", value: params[:queue_name],
+                          class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+      <%= form.text_field :event_type, placeholder: "Event type", value: params[:event_type],
+                          class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+      <%= form.text_field :failure_type, placeholder: "Failure type", value: params[:failure_type],
+                          class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+      <%= form.text_field :fingerprint, placeholder: "Fingerprint", value: params[:fingerprint],
+                          class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+      <%= form.text_field :correlation_id, placeholder: "Correlation ID", value: params[:correlation_id],
+                          class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+      <%= form.text_field :latest_replay_status, placeholder: "Replay status", value: params[:latest_replay_status],
+                          class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+      <%= form.date_field :date_from, value: params[:date_from],
+                          class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+      <%= form.date_field :date_to, value: params[:date_to],
+                          class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+      <div class="flex gap-3 lg:col-span-1">
+        <%= form.submit "Filter",
+                        class: "rounded-2xl bg-stone-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-stone-800" %>
+        <%= link_to "Reset", project_failed_messages_path(@project),
+                    class: "rounded-2xl border border-stone-300 px-4 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:text-stone-950" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+    <% if @failed_messages.any? %>
+      <div class="overflow-hidden rounded-2xl border border-stone-200">
+        <table class="min-w-full divide-y divide-stone-200 text-sm">
+          <thead class="bg-stone-50 text-left text-stone-500">
+            <tr>
+              <th class="px-4 py-3 font-medium">Source</th>
+              <th class="px-4 py-3 font-medium">Queue</th>
+              <th class="px-4 py-3 font-medium">Event</th>
+              <th class="px-4 py-3 font-medium">Failure</th>
+              <th class="px-4 py-3 font-medium">Status</th>
+              <th class="px-4 py-3 font-medium">Last failed</th>
+              <th class="px-4 py-3 font-medium"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-200 bg-white">
+            <% @failed_messages.each do |failed_message| %>
+              <tr>
+                <td class="px-4 py-3 text-stone-600"><%= failed_message.source.name %></td>
+                <td class="px-4 py-3 text-stone-600"><%= failed_message.queue_name %></td>
+                <td class="px-4 py-3 text-stone-600"><%= failed_message.event_type %></td>
+                <td class="px-4 py-3 text-stone-900"><%= failed_message.failure_type_latest %></td>
+                <td class="px-4 py-3 text-stone-600"><%= failed_message.status %></td>
+                <td class="px-4 py-3 text-stone-600"><%= failed_message.last_failed_at.strftime("%Y-%m-%d %H:%M") %></td>
+                <td class="px-4 py-3 text-right">
+                  <%= link_to "Open", project_failed_message_path(@project, failed_message),
+                              class: "rounded-xl border border-stone-300 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-stone-700 transition hover:border-stone-400 hover:text-stone-950" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="rounded-2xl border border-dashed border-stone-300 bg-stone-50 px-5 py-6 text-sm text-stone-600">
+        No failed messages match this filter set yet.
+      </p>
+    <% end %>
+  </div>
+</section>

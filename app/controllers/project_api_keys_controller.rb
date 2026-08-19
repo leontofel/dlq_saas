@@ -1,47 +1,38 @@
 class ProjectApiKeysController < ApplicationController
-  before_action :set_project, only: :create
+  before_action :set_project
   before_action :set_project_api_key, only: :revoke
 
   def create
-    return unless require_organization_role!(@project.organization, :operator).nil?
-
-    result = ProjectApiKeys::Create.call(
+    result = ProjectApiKeys::Lifecycle.issue(
       project: @project,
-      created_by_user: current_user,
+      actor: current_user,
       name: project_api_key_params.fetch(:name),
       scopes: Array(project_api_key_params[:scopes]).reject(&:blank?)
     )
 
-    if result.success?
+    if result.project_api_key.persisted?
       flash[:new_api_key_secret] = result.raw_key
       redirect_to project_path(@project), notice: "API key created. Copy the secret now."
-    else
-      set_current_project(@project)
-      @project_api_keys = @project.project_api_keys.order(created_at: :desc)
-      flash.now[:alert] = result.error
-      render "projects/show", status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordInvalid => error
+    @project_api_keys = @project.project_api_keys.order(created_at: :desc)
+    flash.now[:alert] = error.record.errors.full_messages.to_sentence
+    render "projects/show", status: :unprocessable_entity
   end
 
   def revoke
-    return unless require_organization_role!(@project_api_key.project.organization, :operator).nil?
-
-    ProjectApiKeys::Revoke.call(project_api_key: @project_api_key)
+    ProjectApiKeys::Lifecycle.revoke(@project_api_key)
     redirect_to project_path(@project_api_key.project), notice: "API key revoked."
   end
 
   private
 
   def set_project
-    @project = Project.joins(:organization)
-                      .merge(Organization.visible_to(current_user))
-                      .find(params[:project_id])
+    @project = load_project(params[:project_id], minimum_role: :admin)
   end
 
   def set_project_api_key
-    @project_api_key = ProjectApiKey.joins(project: :organization)
-                                    .merge(Organization.visible_to(current_user))
-                                    .find(params[:id])
+    @project_api_key = @project.project_api_keys.find(params[:id])
   end
 
   def project_api_key_params

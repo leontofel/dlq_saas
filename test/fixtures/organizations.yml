@@ -1,9 +1,0 @@
-acme:
-  name: Acme Platform
-  slug: acme-platform
-  status: active
-
-beta:
-  name: Beta Logistics
-  slug: beta-logistics
-  status: active

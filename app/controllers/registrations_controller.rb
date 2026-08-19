@@ -1,5 +1,5 @@
 class RegistrationsController < ApplicationController
-  skip_before_action :authenticate_user!, only: :create
+  skip_before_action :authenticate_identity!, only: :create
 
   def create
     result = Auth::SignUp.call(**sign_up_params)

@@ -1,0 +1,85 @@
+<section class="space-y-6">
+  <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-sm font-medium uppercase tracking-[0.18em] text-stone-500">Redaction rules</p>
+        <h1 class="mt-2 text-3xl font-semibold tracking-tight text-stone-950">Stored payload redaction</h1>
+        <p class="mt-2 text-sm leading-7 text-stone-600">
+          Rules run before payloads are persisted.
+        </p>
+      </div>
+      <%= link_to "Open sources", project_sources_path(@project),
+                  class: "rounded-xl border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-950" %>
+    </div>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+    <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium uppercase tracking-[0.18em] text-stone-500">Configured rules</p>
+          <h2 class="mt-2 text-xl font-semibold text-stone-950">Current redaction list</h2>
+        </div>
+        <span class="rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-stone-700"><%= @redaction_rules.size %> total</span>
+      </div>
+
+      <% if @redaction_rules.any? %>
+        <div class="mt-5 overflow-hidden rounded-2xl border border-stone-200">
+          <table class="min-w-full divide-y divide-stone-200 text-sm">
+            <thead class="bg-stone-50 text-left text-stone-500">
+              <tr>
+                <th class="px-4 py-3 font-medium">Path</th>
+                <th class="px-4 py-3 font-medium">Replacement</th>
+                <th class="px-4 py-3 font-medium">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-200 bg-white">
+              <% @redaction_rules.each do |rule| %>
+                <tr>
+                  <td class="px-4 py-3 font-medium text-stone-900"><code><%= rule.json_path %></code></td>
+                  <td class="px-4 py-3 text-stone-600"><%= rule.replacement %></td>
+                  <td class="px-4 py-3 text-stone-600"><%= rule.status %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="mt-5 rounded-2xl border border-dashed border-stone-300 bg-stone-50 px-5 py-6 text-sm text-stone-600">
+          No redaction rules yet. Add one when a field should never be stored as-is.
+        </p>
+      <% end %>
+    </div>
+
+    <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+      <h2 class="text-xl font-semibold text-stone-950">Add rule</h2>
+      <p class="mt-2 text-sm leading-7 text-stone-600">
+        Supports payload paths like <code>customer.email</code> and metadata paths like
+        <code>metadata.access_token</code>.
+      </p>
+
+      <%= form_with url: project_redaction_rules_path(@project), scope: :redaction_rule, class: "mt-5 space-y-4" do |form| %>
+        <div>
+          <%= form.label :json_path, class: "block text-sm font-medium text-stone-700" %>
+          <%= form.text_field :json_path, required: true, value: @redaction_rule.json_path,
+                              class: "mt-2 w-full rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+        </div>
+
+        <div>
+          <%= form.label :replacement, class: "block text-sm font-medium text-stone-700" %>
+          <%= form.text_field :replacement, required: true, value: @redaction_rule.replacement || "[REDACTED]",
+                              class: "mt-2 w-full rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+        </div>
+
+        <div>
+          <%= form.label :status, class: "block text-sm font-medium text-stone-700" %>
+          <%= form.select :status, RedactionRule::STATUSES.map { |status| [status.titleize, status] }, { selected: @redaction_rule.status || "active" },
+                          class: "mt-2 w-full rounded-2xl border border-stone-300 px-4 py-3 text-sm outline-none transition focus:border-stone-900" %>
+        </div>
+
+        <%= form.submit "Create rule",
+                        class: "rounded-2xl bg-stone-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-stone-800" %>
+      <% end %>
+    </div>
+  </div>
+</section>
