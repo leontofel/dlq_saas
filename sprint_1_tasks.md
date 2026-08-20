@@ -1,5 +1,9 @@
 # DLQ as a Service Sprint 1 Tasks
 
+**Status: Complete**
+
+Sprint 1 delivered authentication, organizations and memberships, projects, tenant authorization, project API keys, the dashboard shell, repeatable local setup, and the CI baseline. This document is retained as the delivery record; current work is tracked in `sprint_3_tasks.md`.
+
 ## Sprint Goal
 
 Complete the Phase 1 foundation work so the team can start Sprint 2 with a stable base for ingestion and inbox features.

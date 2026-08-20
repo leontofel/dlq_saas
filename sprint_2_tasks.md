@@ -1,5 +1,21 @@
 # DLQ as a Service Sprint 2 Tasks
 
+**Status: Complete**
+
+## Delivered Outcome
+
+Sprint 2 delivered:
+
+- authenticated HTTP ingestion through scoped project API keys
+- project-scoped source and redaction-rule management
+- payload validation, limits, redaction, and deterministic duplicate handling
+- failed-message and failure-attempt persistence with an immutable original payload
+- a filterable inbox and detailed investigation page
+- message status changes and operator notes
+- integration and service coverage for ingestion, investigation, roles, and tenant isolation
+
+The remaining system-test gap is a real browser smoke test. It is release hardening, not a blocker for starting incident grouping.
+
 ## Sprint Goal
 
 Complete the Phase 2 ingestion and inbox work so the team can start Sprint 3 with a usable failed-message investigation surface and a stable ingestion contract.
@@ -44,16 +60,17 @@ Sprint 2 should leave the project with:
 
 ## Current Repo Notes
 
-The repo now has:
+At Sprint 2 completion, the repo has:
 
 - authenticated browser access
 - organizations, memberships, and projects
 - project API keys
 - tenant scoping and basic role checks
-- a dashboard shell
+- a dashboard shell and project-scoped failed-message inbox
 - SQLite-first local setup and CI baseline
+- implemented ingestion and investigation services with request and integration tests
 
-The repo also already contains later-phase schema and model scaffolding for ingestion entities. Sprint 2 should stabilize and implement the ingestion and inbox subset first, without pulling replay or incident behavior into scope prematurely.
+Later-phase incident, replay, alert, and audit tables are scaffolding only. Their presence must not be treated as completed product behavior.
 
 ## Sprint 2 Backlog
 
@@ -269,7 +286,7 @@ Recommended sequence:
 
 ## Sprint Acceptance Criteria
 
-Sprint 2 is complete when:
+Sprint 2 was completed with:
 
 - project API keys can authenticate ingestion requests
 - sources and redaction rules can be managed per project
@@ -280,3 +297,7 @@ Sprint 2 is complete when:
 - tenant isolation still holds across ingestion and inbox queries
 - local docs explain how to submit and inspect a failed message
 - CI continues catching schema, test, and asset regressions
+
+## Handoff to Sprint 3
+
+Sprint 3 should implement incident grouping as a vertical workflow. See `sprint_3_tasks.md` for the ordered backlog and acceptance criteria.

@@ -14,13 +14,15 @@ The schema needs to support:
 - safe replay tracking with batches and per-message attempts
 - alerts, redaction rules, and auditability
 
-The goal is to make the first migration pass decision-complete enough that implementation can start without redesigning the data model mid-build.
+The goal is to keep the implemented migrations and future behavior aligned without redesigning the data model mid-build.
 
 ## 2. Current Repo Reality
 
-The database plan is grounded in the current codebase:
+The database design has now been migrated into the current codebase:
 
-- the Rails app has no domain-specific business tables yet
+- the primary database contains the full planned MVP domain schema
+- Phase 1 foundation and Phase 2 ingestion/inbox behavior are implemented
+- incident, replay, alert, and audit tables exist as later-phase scaffolding; most behavior for them is not implemented yet
 - the app is SQLite-first today, per [config/database.yml](/home/leon/Downloads/dlq_saas/config/database.yml)
 - the repo already uses framework-managed support databases for `solid_queue`, `solid_cache`, and `solid_cable`
 - those support schemas are visible in [db/queue_schema.rb](/home/leon/Downloads/dlq_saas/db/queue_schema.rb), [db/cache_schema.rb](/home/leon/Downloads/dlq_saas/db/cache_schema.rb), and [db/cable_schema.rb](/home/leon/Downloads/dlq_saas/db/cable_schema.rb)
@@ -832,7 +834,11 @@ Use these deletion rules for the MVP:
 
 ## 8. Migration Sequencing by Phase
 
+All listed MVP tables currently exist in `db/schema.rb`. The phases below now describe behavior-delivery order, not pending table creation. Schema scaffolding is not evidence that a phase is complete.
+
 ### Phase 1: Tenant and access
+
+**Status: schema and behavior complete**
 
 Create:
 
@@ -844,6 +850,8 @@ Create:
 
 ### Phase 2: Ingestion and inbox
 
+**Status: schema and behavior complete**
+
 Create:
 
 - `sources`
@@ -854,17 +862,21 @@ Create:
 
 ### Phase 3: Incident handling
 
+**Status: schema complete; behavior next**
+
 Create:
 
 - `incident_groups`
 - `incident_notes`
 
-Then add:
+Confirm and use:
 
-- `incident_group_id` foreign key on `failed_messages` if not added earlier
-- incident counters and summary backfill jobs
+- the existing `incident_group_id` foreign key on `failed_messages`
+- incident counters and a deterministic counter-rebuild path
 
 ### Phase 4: Replay
+
+**Status: schema scaffolded; behavior planned**
 
 Create:
 
@@ -873,6 +885,8 @@ Create:
 - `replay_attempts`
 
 ### Phase 5: Governance and operations
+
+**Status: schema scaffolded; behavior planned**
 
 Create:
 

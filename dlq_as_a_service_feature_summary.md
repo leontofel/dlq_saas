@@ -17,6 +17,15 @@ HTTP failure ingestion
 -> audit trail
 ```
 
+## Current Implementation Status
+
+- **Phase 1 - Foundation:** complete. Authentication, organizations, memberships, projects, tenant access, API keys, the app shell, local setup, and CI are implemented.
+- **Phase 2 - Ingestion and Inbox:** complete. Authenticated HTTP ingestion, source and redaction-rule management, duplicate handling, immutable payload storage, failure attempts, inbox filters, message detail, notes, and status changes are implemented.
+- **Phase 3 - Incident Grouping:** next. The database tables and associations exist, but grouping services, incident workflows, UI, and tests still need implementation.
+- **Phases 4-7:** planned. Their schema scaffolding may exist, but this does not mean their product behavior is implemented.
+
+The next delivery target is defined in `sprint_3_tasks.md`. Broker adapters remain deferred until the HTTP-first investigation and replay loop is complete and hardened.
+
 ## MVP
 
 The MVP proves the core failure-recovery workflow end to end.
@@ -86,6 +95,8 @@ The MVP proves the core failure-recovery workflow end to end.
 
 ### Phase 1: Foundation
 
+**Status: complete**
+
 - Rails API
 - Database schema
 - Authentication
@@ -96,6 +107,8 @@ The MVP proves the core failure-recovery workflow end to end.
 - CI pipeline
 
 ### Phase 2: Ingestion and Inbox
+
+**Status: complete**
 
 - HTTP ingestion
 - Payload validation
@@ -108,6 +121,8 @@ The MVP proves the core failure-recovery workflow end to end.
 
 ### Phase 3: Incident Grouping
 
+**Status: next**
+
 - Failure fingerprinting
 - Error normalization
 - Incident groups
@@ -116,6 +131,8 @@ The MVP proves the core failure-recovery workflow end to end.
 - Notes
 
 ### Phase 4: Controlled Replay
+
+**Status: planned**
 
 - Replay destinations
 - Secret encryption
@@ -130,6 +147,8 @@ The MVP proves the core failure-recovery workflow end to end.
 
 ### Phase 5: Alerts and Auditability
 
+**Status: planned**
+
 - Alert rules
 - Email and webhook alerts
 - Alert retries
@@ -138,6 +157,8 @@ The MVP proves the core failure-recovery workflow end to end.
 - Audit-log UI
 
 ### Phase 6: Hardening
+
+**Status: planned**
 
 - Retention cleanup
 - Metrics
@@ -149,6 +170,8 @@ The MVP proves the core failure-recovery workflow end to end.
 - Deployment scripts
 
 ### Phase 7: First Broker Integration
+
+**Status: planned**
 
 - Amazon SQS DLQ adapter
 - Credential configuration
