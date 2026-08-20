@@ -23,9 +23,9 @@ The database design has now been migrated into the current codebase:
 - the primary database contains the full planned MVP domain schema
 - Phase 1 foundation and Phase 2 ingestion/inbox behavior are implemented
 - incident, replay, alert, and audit tables exist as later-phase scaffolding; most behavior for them is not implemented yet
-- the app is SQLite-first today, per [config/database.yml](/home/leon/Downloads/dlq_saas/config/database.yml)
+- the app is SQLite-first today, per [config/database.yml](../config/database.yml)
 - the repo already uses framework-managed support databases for `solid_queue`, `solid_cache`, and `solid_cable`
-- those support schemas are visible in [db/queue_schema.rb](/home/leon/Downloads/dlq_saas/db/queue_schema.rb), [db/cache_schema.rb](/home/leon/Downloads/dlq_saas/db/cache_schema.rb), and [db/cable_schema.rb](/home/leon/Downloads/dlq_saas/db/cable_schema.rb)
+- those support schemas are visible in [db/queue_schema.rb](../db/queue_schema.rb), [db/cache_schema.rb](../db/cache_schema.rb), and [db/cable_schema.rb](../db/cable_schema.rb)
 
 This document only defines the DLQ business schema for the primary application database.
 
@@ -715,6 +715,34 @@ Notes:
 - `metadata_text` stores structured JSON for context without duplicating full message payloads
 
 ## 6. Relationship Diagram in Text Form
+
+The complete visual model and request-flow diagrams live in [DLQ as a Service Models and Architecture](dlq_as_a_service_architecture.md).
+
+![DLQ as a Service domain model](images/domain_model.svg)
+
+<details>
+<summary>Compact Mermaid source</summary>
+
+```mermaid
+flowchart LR
+  User["User"] --> Membership["Organization membership"]
+  Membership --> Organization["Organization"]
+  Organization --> Project["Project"]
+  Project --> Source["Source"]
+  Project --> Message["Failed message"]
+  Source --> Message
+  Message --> Attempt["Failure attempts"]
+  Message --> Note["Message notes"]
+  Project -. Sprint 3 .-> Incident["Incident group"]
+  Incident -.-> Message
+  Incident -.-> IncidentNote["Incident notes"]
+  Project -. planned .-> Replay["Replay"]
+  Project -. planned .-> Alerts["Alerts and audit"]
+```
+
+</details>
+
+The equivalent relationship list is retained below for text-only tools:
 
 ```text
 organizations

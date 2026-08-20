@@ -1,11 +1,11 @@
 # Graph Report - dlq_saas  (2026-08-20)
 
 ## Corpus Check
-- 152 files · ~62,290 words
+- 152 files · ~45,175 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1032 nodes · 1049 edges · 156 communities (89 shown, 67 thin omitted)
+- 1032 nodes · 1049 edges · 155 communities (88 shown, 67 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 66 edges (avg confidence: 0.89)
 - Token cost: 0 input · 0 output
 
@@ -148,7 +148,6 @@
 - [[_COMMUNITY_User|User]]
 - [[_COMMUNITY_AddPayloadIdentityDigestToFailedMessages|AddPayloadIdentityDigestToFailedMessages]]
 - [[_COMMUNITY_10. Background Jobs|10. Background Jobs]]
-- [[_COMMUNITY_Intake|Intake]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Dead-Letter Queue as a Service` - 99 edges
@@ -181,15 +180,15 @@
 - **Delivery Plan Documents** — dlq_as_a_service_requirements_document, dlq_as_a_service_feature_summary_document, dlq_as_a_service_database_structure_document, sprint_1_tasks_document, sprint_2_tasks_document [INFERRED 0.85]
 - **Runtime Operational Stack** — readme_document, compose_document, config_database_document, github_workflows_ci_document, github_dependabot_document [INFERRED 0.75]
 
-## Communities (156 total, 67 thin omitted)
+## Communities (155 total, 67 thin omitted)
 
 ### Community 0 - "Model Test Suite"
 Cohesion: 0.07
 Nodes (13): OrganizationMembershipTest, OrganizationTest, ProjectApiKeyTest, ProjectTest, RedactionRuleTest, UserTest, FailedMessages::IntakeTest, FailedMessages::InvestigationTest (+5 more)
 
 ### Community 1 - "Service Object Flows"
-Cohesion: 0.08
-Nodes (6): ApplicationService, Authenticate, Login, Create, Create, Create
+Cohesion: 0.06
+Nodes (7): ApplicationService, Authenticate, Login, Intake, Create, Create, Create
 
 ### Community 2 - "API Auth Controllers"
 Cohesion: 0.11
@@ -240,8 +239,8 @@ Cohesion: 0.25
 Nodes (5): ApplicationRecord, FailureAttempt, IncidentGroup, Failure Attempts.Yml, Incident Groups.Yml
 
 ### Community 27 - "Dashboard Controller"
-Cohesion: 0.13
-Nodes (9): bearer_token(), Jwt, ProjectApiKey, resolve(), Session, Unauthorized, Forbidden, TenantAccess (+1 more)
+Cohesion: 0.10
+Nodes (11): PayloadConflict, Submission, bearer_token(), Jwt, ProjectApiKey, resolve(), Session, Unauthorized (+3 more)
 
 ### Community 32 - "Incident Group Model"
 Cohesion: 0.08
@@ -447,10 +446,6 @@ Nodes (3): 2.1 Primary goals, 2.2 Secondary goals, 2. Goals
 Cohesion: 0.43
 Nodes (6): canonical_json(), canonicalize(), digest(), hmac(), matches?(), PayloadIdentity
 
-### Community 155 - "Intake"
-Cohesion: 0.13
-Nodes (3): Intake, PayloadConflict, Submission
-
 ## Knowledge Gaps
 - **479 isolated node(s):** `application`, `PayloadIdentity`, `Lifecycle`, `ActiveSupport::TestCase`, `Usage` (+474 more)
   These have ≤1 connection - possible missing edges or undocumented components.
@@ -470,6 +465,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Model Test Suite` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `Service Object Flows` be split into smaller, more focused modules?**
-  _Cohesion score 0.07526881720430108 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.055152394775036286 - nodes in this community are weakly interconnected._
 - **Should `API Auth Controllers` be split into smaller, more focused modules?**
   _Cohesion score 0.11255411255411256 - nodes in this community are weakly interconnected._

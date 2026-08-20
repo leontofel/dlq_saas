@@ -6,9 +6,10 @@ Rails 8 application for the DLQ-as-a-service product.
 
 Foundation and HTTP ingestion/inbox work are complete. Incident grouping is the next milestone.
 
-- [Feature roadmap](dlq_as_a_service_feature_summary.md)
-- [Database structure](dlq_as_a_service_database_structure.md)
-- [Sprint 3 tasks](sprint_3_tasks.md)
+- [Feature roadmap](docs/dlq_as_a_service_feature_summary.md)
+- [Models and architecture diagrams](docs/dlq_as_a_service_architecture.md)
+- [Database structure](docs/dlq_as_a_service_database_structure.md)
+- [Sprint 3 tasks](docs/sprint_3_tasks.md)
 
 ## Stack
 

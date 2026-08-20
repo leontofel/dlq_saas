@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="720" viewBox="0 0 1800 720" role="img" aria-labelledby="title description">
+  <title id="title">Failed-message ingestion flow</title>
+  <desc id="description">Authenticated API ingestion through identity, validation, redaction, deduplication, and transactional persistence.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#22302a" flood-opacity="0.12"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#315f4f"/></marker>
+    <style>
+      .title { font: 700 40px Georgia, serif; fill: #18352c; }
+      .subtitle { font: 18px Verdana, sans-serif; fill: #53645d; }
+      .step { font: 700 17px Verdana, sans-serif; fill: #17362c; }
+      .copy { font: 13px Verdana, sans-serif; fill: #52635c; }
+      .number { font: 700 16px Verdana, sans-serif; fill: #ffffff; }
+      .result { font: 700 15px Verdana, sans-serif; fill: #17362c; }
+      .edge { fill: none; stroke: #315f4f; stroke-width: 4; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1800" height="720" fill="#f7f3ea"/>
+  <circle cx="1710" cy="40" r="190" fill="#dbe9df" opacity="0.65"/>
+  <text x="60" y="70" class="title">Failed-message ingestion</text>
+  <text x="62" y="105" class="subtitle">One protected path from external failure to an idempotent inbox record</text>
+
+  <path d="M280 318 H335" class="edge"/>
+  <path d="M555 318 H610" class="edge"/>
+  <path d="M830 318 H885" class="edge"/>
+  <path d="M1105 318 H1160" class="edge"/>
+  <path d="M1380 318 H1435" class="edge"/>
+
+  <g filter="url(#shadow)">
+    <rect x="60" y="210" width="220" height="216" rx="22" fill="#ffffff" stroke="#2e7d52" stroke-width="2"/>
+    <rect x="335" y="210" width="220" height="216" rx="22" fill="#ffffff" stroke="#2e7d52" stroke-width="2"/>
+    <rect x="610" y="210" width="220" height="216" rx="22" fill="#ffffff" stroke="#2e7d52" stroke-width="2"/>
+    <rect x="885" y="210" width="220" height="216" rx="22" fill="#ffffff" stroke="#2e7d52" stroke-width="2"/>
+    <rect x="1160" y="210" width="220" height="216" rx="22" fill="#ffffff" stroke="#2e7d52" stroke-width="2"/>
+    <rect x="1435" y="210" width="305" height="216" rx="22" fill="#315f4f" stroke="#315f4f" stroke-width="2"/>
+  </g>
+
+  <g>
+    <circle cx="95" cy="245" r="20" fill="#2e7d52"/><text x="90" y="251" class="number">1</text>
+    <text x="85" y="294" class="step">Receive</text><text x="85" y="327" class="copy">POST /api/failed_messages</text><text x="85" y="352" class="copy">Payload + failure details</text><text x="85" y="389" class="copy">API controller</text>
+
+    <circle cx="370" cy="245" r="20" fill="#2e7d52"/><text x="365" y="251" class="number">2</text>
+    <text x="360" y="294" class="step">Authenticate</text><text x="360" y="327" class="copy">Verify key digest</text><text x="360" y="352" class="copy">Require messages:write</text><text x="360" y="389" class="copy">RequestIdentity</text>
+
+    <circle cx="645" cy="245" r="20" fill="#2e7d52"/><text x="640" y="251" class="number">3</text>
+    <text x="635" y="294" class="step">Resolve tenant</text><text x="635" y="327" class="copy">Project + active source</text><text x="635" y="352" class="copy">Source allowlist</text><text x="635" y="389" class="copy">API-key principal</text>
+
+    <circle cx="920" cy="245" r="20" fill="#2e7d52"/><text x="915" y="251" class="number">4</text>
+    <text x="910" y="294" class="step">Validate</text><text x="910" y="327" class="copy">Required fields</text><text x="910" y="352" class="copy">Timestamp + attempt</text><text x="910" y="377" class="copy">Payload-size limit</text>
+
+    <circle cx="1195" cy="245" r="20" fill="#2e7d52"/><text x="1190" y="251" class="number">5</text>
+    <text x="1185" y="294" class="step">Protect payload</text><text x="1185" y="327" class="copy">Digest original</text><text x="1185" y="352" class="copy">Redact storage copy</text><text x="1185" y="389" class="copy">Canonical JSON</text>
+
+    <circle cx="1470" cy="245" r="20" fill="#f0a261"/><text x="1465" y="251" class="number">6</text>
+    <text x="1460" y="294" style="font:700 17px Verdana,sans-serif;fill:#ffffff">Persist transaction</text><text x="1460" y="327" style="font:13px Verdana,sans-serif;fill:#dff0e5">Find/create failed message</text><text x="1460" y="352" style="font:13px Verdana,sans-serif;fill:#dff0e5">Insert unique attempt</text><text x="1460" y="377" style="font:13px Verdana,sans-serif;fill:#dff0e5">Update inbox summary</text><text x="1460" y="402" style="font:13px Verdana,sans-serif;fill:#dff0e5">Recover unique-index race</text>
+  </g>
+
+  <text x="60" y="507" style="font:700 15px Verdana,sans-serif;letter-spacing:1px;fill:#315f4f">DETERMINISTIC RESULT</text>
+  <path d="M1588 426 V474 H900 V535" class="edge"/>
+  <g filter="url(#shadow)">
+    <rect x="510" y="535" width="245" height="105" rx="20" fill="#dff0e5" stroke="#2e7d52" stroke-width="2"/>
+    <rect x="778" y="535" width="245" height="105" rx="20" fill="#e7f0f7" stroke="#2e6486" stroke-width="2"/>
+    <rect x="1046" y="535" width="245" height="105" rx="20" fill="#fff0dc" stroke="#c76028" stroke-width="2"/>
+  </g>
+  <text x="587" y="578" class="result">CREATED</text><text x="573" y="610" class="copy">201 + new message</text>
+  <text x="855" y="578" class="result">UPDATED</text><text x="837" y="610" class="copy">200 + new attempt</text>
+  <text x="1116" y="578" class="result">DUPLICATE</text><text x="1108" y="610" class="copy">200 + no mutation</text>
+</svg>
